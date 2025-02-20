@@ -1,4 +1,5 @@
 import React from 'react';
+import '@mantine/core/styles.css';
 import { MantineProvider, Container, Title, Button } from '@mantine/core';
 import ExpenseTable from './components/ExpenseTable';
 import CategoryPieChart from './components/CategoryPieChart';
