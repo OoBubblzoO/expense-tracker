@@ -1,90 +1,56 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Ignore Python virtual environments
+# ---- IGNORE PYTHON FILES & VIRTUAL ENVIRONMENT ----
+backend/env/
+backend/venv/
 env/
 venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
 *.sqlite3
-database.db
 
-# Ignore Python logs and cache
-logs/
-*.log
-*.pot
-*.pyc
-*.swp
-*.swo
-*.DS_Store
+# ---- IGNORE DATABASE FILES ----
+backend/database.db
 
-# Ignore virtual environment settings
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Ignore Flask and other Python dependencies
-instance/
-.env
-config.py
-*.bak
-*.db
-
-# Ignore Node.js dependencies (Frontend)
-node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
-package-lock.json
-
-# Ignore build files
-dist/
-build/
-.cache/
-.vscode/
-
-# Ignore Python virtual environment
-backend/env/
-backend/env/*
-
-# Ignore dependencies in frontend (node_modules)
+# ---- IGNORE FRONTEND NODE MODULES ----
 frontend/node_modules/
-frontend/node_modules/*
-
-# Ignore frontend build files
-frontend/.next/
-frontend/.next/*
+frontend/.pnp/
+frontend/.pnp.js
 frontend/dist/
-frontend/dist/*
 frontend/build/
-frontend/build/*
+frontend/.next/
 
-# Ignore logs and cache
+# ---- IGNORE LOGS & TEMP FILES ----
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
+.pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# ---- IGNORE ENVIRONMENT VARIABLES & SECRETS ----
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ---- IGNORE EDITOR & SYSTEM FILES ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# ---- IGNORE OUTPUT & CACHE FILES ----
+frontend/.parcel-cache/
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.pytest_cache/
+backend/.mypy_cache/
+
