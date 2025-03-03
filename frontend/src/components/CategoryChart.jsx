@@ -52,7 +52,7 @@ const CategoryChart = () => {
 
     return (
         <div>
-            <h3>Expenses by category</h3>
+            <h3 align="center">Expenses by category</h3>
             <Bar data={chartData} />
         </div>
     );

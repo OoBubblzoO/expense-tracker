@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { TextInput, NumberInput, Button, Group, Paper, Title, Box, FilInput } from '@mantine/core';
+import { IconUpload, IconPlus } from '@tabler/icons-react';
 import api from '../services/api';
+import CsvUpload from './CsvUpload'; //get CSVupload to be a part of the expenseForm rather than separate
 
 const AddExpenseForm = ({ onExpenseAdded }) => {
     const [formData, setFormData] = useState({
@@ -10,38 +13,84 @@ const AddExpenseForm = ({ onExpenseAdded }) => {
 
     });
 
-    const handleChange = (e) => {
+    // Handle Input 
+    const handleChange = (field, value) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value,
+            [field]: value
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!formData.date || !formData.category || !formData.amount) {
+            alert('Please fill in all required fields: date, category, and amount');
+            return;
+        }
         try {
-            const response = await api.post('/add_expense', formData);
-            console.log('Expense Added:', response.data);
-            onExpenseAdded(); //referesh table
-            setFormData({ date:'', category:'', amount:'', description:''}); // reset form
+            await api.post('/add_expense', formData);
+            // reset form after a submission 
+            setFormData({ 
+                date:'', 
+                category:'', 
+                amount:'', 
+                description:''
+            });
+
+            // refresh expense list
+            if (onExpenseAdded) onExpenseAdded();
         } catch(error) {
             console.error('Error adding expense:', error);
+            alert('Error adding expense. Please try again.');
         }
     };
 
     return (
-        <div>
-            <h3>Add Expense</h3>
-            <form onSubmit={handleSubmit}>
-                <input type="date" name="date" value={formData.date} onChange={handleChange} required />
-                <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} required />
-                <input type="text" name="amount" placeholder="Amount" value={formData.amount} onChange={handleChange} required />
-                <input type="text" name="description" placeholder="Description" value={formData.description} onChange={handleChange}  />
-                <button type="submit">Add Expense</button>
-            </form>
-        </div>
-    )
+        <Paper shadow="xs" p="md" withBorder mb="lg">
+            <Title order={4} mb="md" >Add New Expense</Title>
+            
+            <Box component="form" onSubmit={handleSubmit}>
+                <Group position="apart" align="flex-end" spacing="md">
+                    <TextInput 
+                        type="date" 
+                        label="Date" 
+                        value={formData.date} 
+                        onChange={(e) => handleChange('date', e.target.value)} 
+                        style={{ flex: 1}}
+                        required />
+                    <TextInput 
+                        label="Category" 
+                        placeholder="e.g., Food, Transportation" 
+                        value={formData.category} 
+                        onChange={(e) => handleChange('category', e.target.value)} 
+                        required />
+                    <NumberInput  
+                        label="Amount ($)" 
+                        placeholder="0.00" 
+                        precision={2}
+                        min={0}
+                        value={formData.amount || ''} 
+                        onChange={(val) => handleChange('amount', val)}
+                        style={{ flex: 1 }} 
+                        required />
+                    <TextInput  
+                        label="Description" 
+                        placeholder="Optional details" 
+                        value={formData.description} 
+                        onChange={(e) => handleChange('description', e.target.value)}  
+                        style={{ flex: 2 }}/>
+                    <Button type="submit" color="blue" leftIcon={<IconPlus size={16} />}>
+                        Add Expense
+                    </Button>
+                </Group>
+
+                <Group position="left" mt="md">
+                    <CsvUpload onUploadSuccess={onExpenseAdded} />
+                </Group>
+            </Box>
+        </Paper>
+    );
 };
 
 export default AddExpenseForm;

@@ -1,9 +1,59 @@
+import os
+import pandas as pd
 import sqlite3
 from flask import Flask, request, jsonify
 from flask_cors import CORS # ALLOWS CROSS ORIGIN REQUESTS
 
+
 app = Flask(__name__)
 CORS(app) #enable for all
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True) # if doesn't exist create
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
+@app.route('/upload_csv', methods=["POST"])
+def upload_csv():
+    # error handling
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part."}), 400
+    
+    file = request.files['file']
+
+    if file.name == '':
+        return jsonify({"error": "No selected file."}), 400
+    
+    if not file.filename.endswith('.csv'):
+        return jsonify({"error": "Invalid format, use a CSV file."}), 400
+    
+    # csv file saved inside uploads folder
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+    file.save(file_path)
+
+    try: 
+        df = pd.read_csv(file_path) # read file
+
+        # check for columns needed else return error
+        required_columns = {"date", "category", "amount", "description"}
+        if not required_columns.issubset(df.columns):
+            return jsonify({"error": "Invalid CSV format. Required columns: date, category, amount, description"}), 400
+
+        connection = sqlite3.connect("database.db")
+        cursor = connection.cursor()
+
+        for _, row in df.iterrows(): #ignore index use _
+            cursor.execute('''
+                INSERT INTO expenses (date, category, amount, description)
+                VALUES (?, ?, ?, ?)
+            ''', (row["date"], row["category"], row["amount"], row["description"]))
+        
+        connection.commit()
+        connection.close()
+        return jsonify({"message": "CSV file imported successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 def create_database():
     connection = sqlite3.connect('database.db') # connects sqlite to file | else create
     cursor = connection.cursor() # create cursor for sql commands

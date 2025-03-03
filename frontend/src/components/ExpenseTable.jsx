@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import AddExpenseForm from './AddExpenseForm';
 import CategoryChart from './CategoryChart';
-import { Table, TableData, Button, Text, Group, ScrollArea, Paper, TextInput, NumberInput } from '@mantine/core';
-
+import { Table, TableData, Button, Text, Group, ScrollArea, Paper, TextInput, NumberInput, Stack, Title } from '@mantine/core';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 const ExpenseTable = () => {
     const [expenses, setExpenses] = useState([]);
@@ -64,109 +64,118 @@ const ExpenseTable = () => {
     } ;
 
     return (
-        <Paper shadow="xs" radius="xs" p="xl">
-            <Text align="center" size="xl" fw={700} mb="md">
-                Expense Tracker
-            </Text>
+        <Stack spacing="lg">
+            <Title order={2} align="center">Expense Tracker</Title>
             
-            <AddExpenseForm onExpenseAdded={fetchExpenses} /> {/* New Form Component */}
-            
-            <ScrollArea>
-                <Table striped highlightOnHover withBorder>
-                    <thead>
-                        <tr>
-                            <th style= {{ textAlign: 'center' }}>ID</th>
-                            <th style= {{ textAlign: 'center' }}>Date</th>
-                            <th style= {{ textAlign: 'center' }}>Category</th>
-                            <th style= {{ textAlign: 'center' }}>Amount ($)</th>
-                            <th style= {{ textAlign: 'center' }}>Description</th>
-                            <th style= {{ textAlign: 'center' }}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {expenses.length > 0 ? (
-                            expenses.map((expense) => (
-                                <tr key={expense.id}>
-                                    {editingExpense?.id === expense.id ? (
-                                        <>
-                                            {/* Editing */}
-                                            <td style= {{ textAlign: 'center' }}>{expense.id}</td>
-                                            <td style= {{ textAlign: 'center' }}>
-                                                <TextInput
-                                                 type="date" 
-                                                 name="date" 
-                                                 value={updatedData.date} 
-                                                 onChange={(e) => handleChange(e)} 
-                                                 size="xs"
-                                            />
-                                            </td>
-                                            <td style= {{ textAlign: 'center' }}>
-                                                <TextInput
-                                                 type="text" 
-                                                 name="category" 
-                                                 value={updatedData.category} 
-                                                 onChange={(e) => handleChange(e)}
-                                                 size="xs" 
-                                                 />
-                                                </td>
-                                            <td style= {{ textAlign: 'center' }}>
-                                                <NumberInput 
-                                                 name="amount" 
-                                                 value={updatedData.amount} 
-                                                 onChange={(val) => setUpdatedData({...updatedData, amount: val})}
-                                                 size="xs"
-                                                 precision={2} 
-                                                 />
-                                                 </td>
-                                            <td style= {{ textAlign: 'center' }}>
-                                                <TextInput
-                                                 type="text" 
-                                                 name="description" 
-                                                 value={updatedData.description} 
-                                                 onChange={(e) => handleChange(e)}
-                                                 size="xs"
-                                                 />
-                                                 </td>
-                                            <td style= {{ textAlign: 'center' }}>
-                                                <Group position="center" spacing="xs">
-                                                    <Button color="blue" size="xs" onClick={() => handleUpdate(expense.id)}>Save</Button>
-                                                    <Button color="red" size="xs" onClick={() => setEditingExpense(null)}>Cancel</Button>
-                                                </Group>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            {/* Normal */}
-                                            <td style= {{ textAlign: 'center' }}>{expense.id}</td>
-                                            <td style= {{ textAlign: 'center' }}>{expense.date}</td>
-                                            <td style= {{ textAlign: 'center' }}>{expense.category}</td>
-                                            <td style= {{ textAlign: 'center' }}>${expense.amount.toFixed(2)}</td>
-                                            <td style= {{ textAlign: 'center' }}>{expense.description}</td>
-                                            <td style= {{ textAlign: 'center' }}>
-                                            <Group position="center" spacing="xs">
-                                                <Button color="blue" size="xs" onClick={() => handleEdit(expense)}>Edit</Button>
-                                                <Button color="red" size="xs" onClick={() => handleDelete(expense.id)}>Delete</Button>
-                                            </Group>
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
-                            ))
-                        ) : (
+            <AddExpenseForm onExpenseAdded={fetchExpenses} />
+            <Paper shadow="xs" p="md" withBorder>
+                <ScrollArea>
+                    <Table striped highlightOnHover withBorder>
+                        <thead>
                             <tr>
-                                <td colSpan="6" style={{ textAlign: 'center' }}>
-                                    No expenses found.
-                                </td>
+                                <th style= {{ textAlign: 'center' }}>ID</th>
+                                <th style= {{ textAlign: 'center' }}>Date</th>
+                                <th style= {{ textAlign: 'center' }}>Category</th>
+                                <th style= {{ textAlign: 'center' }}>Amount ($)</th>
+                                <th style= {{ textAlign: 'center' }}>Description</th>
+                                <th style= {{ textAlign: 'center' }}>Actions</th>
                             </tr>
-                        )}
-                    </tbody>
-                    </Table>
-                </ScrollArea>    
-                <div>
-                <CategoryChart />
-                
-            </div>
-        </Paper>
+                        </thead>
+                        <tbody>
+                            {expenses.length > 0 ? (
+                                expenses.map((expense) => (
+                                    <tr key={expense.id}>
+                                        {editingExpense?.id === expense.id ? (
+                                            <>
+                                                {/* Editing */}
+                                                <td style= {{ textAlign: 'center' }}>{expense.id}</td>
+                                                <td style= {{ textAlign: 'center' }}>
+                                                    <TextInput
+                                                    type="date" 
+                                                    name="date" 
+                                                    value={updatedData.date} 
+                                                    onChange={(e) => handleChange(e)} 
+                                                    size="xs"
+                                                />
+                                                </td>
+                                                <td style= {{ textAlign: 'center' }}>
+                                                    <TextInput
+                                                    type="text" 
+                                                    name="category" 
+                                                    value={updatedData.category} 
+                                                    onChange={(e) => handleChange(e)}
+                                                    size="xs" 
+                                                    />
+                                                    </td>
+                                                <td style= {{ textAlign: 'center' }}>
+                                                    <NumberInput 
+                                                    name="amount" 
+                                                    value={updatedData.amount} 
+                                                    onChange={(val) => setUpdatedData({...updatedData, amount: val})}
+                                                    size="xs"
+                                                    precision={2} 
+                                                    />
+                                                    </td>
+                                                <td style= {{ textAlign: 'center' }}>
+                                                    <TextInput
+                                                    type="text" 
+                                                    name="description" 
+                                                    value={updatedData.description} 
+                                                    onChange={(e) => handleChange(e)}
+                                                    size="xs"
+                                                    />
+                                                    </td>
+                                                <td style= {{ textAlign: 'center' }}>
+                                                    <Group position="center" spacing="xs">
+                                                        <Button color="blue" size="xs" onClick={() => handleUpdate(expense.id)}>Save</Button>
+                                                        <Button color="red" size="xs" onClick={() => setEditingExpense(null)}>Cancel</Button>
+                                                    </Group>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {/* Normal */}
+                                                <td style= {{ textAlign: 'center' }}>{expense.id}</td>
+                                                <td style= {{ textAlign: 'center' }}>{expense.date}</td>
+                                                <td style= {{ textAlign: 'center' }}>{expense.category}</td>
+                                                <td style= {{ textAlign: 'center' }}>${expense.amount.toFixed(2)}</td>
+                                                <td style= {{ textAlign: 'center' }}>{expense.description}</td>
+                                                <td style= {{ textAlign: 'center' }}>
+                                                <Group position="center" spacing="xs">
+                                                    <Button 
+                                                        color="blue" 
+                                                        size="xs" 
+                                                        onClick={() => handleEdit(expense)}>
+                                                            Edit
+                                                        </Button>
+                                                    <Button 
+                                                        color="red" 
+                                                        size="xs" 
+                                                        onClick={() => handleDelete(expense.id)}>
+                                                            Delete
+                                                        </Button>
+                                                </Group>
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                                        No expenses found.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                        </Table>
+                    </ScrollArea>    
+                    <div>
+                    <CategoryChart />
+                    
+                </div>
+            </Paper>
+        </Stack>
     );
 };
 
