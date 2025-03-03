@@ -11,11 +11,13 @@ Data Visualization – Expenses are displayed using charts for better insights.
 Mantine UI Components – Clean, modern UI built using Mantine.
 Confirmations & Validations – Prevents incorrect inputs and accidental deletions.
 
-🛠️ Tech StackFrontend:
+🛠️ Tech Stack
+Frontend:
 React
 Mantine UI
 Axios
 Chart.js
+
 Backend:
 Flask
 SQLite
